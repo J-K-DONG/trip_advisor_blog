@@ -12,7 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//身份过滤器
+
+/**
+ * @author 董晋坤
+ * 身份过滤器
+ */
 public class AuthFilter implements Filter {
 
 	public void destroy() {

@@ -10,7 +10,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 /**
- * Servlet Filter implementation class EncodingFilter 字符过滤器 解决字符乱码的问题
+ * Servlet Filter implementation class EncodingFilter 
+ *  字符过滤器 解决字符乱码的问题
  */
 public class EncodingFilter implements Filter {
 

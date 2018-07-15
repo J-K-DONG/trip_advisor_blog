@@ -10,7 +10,8 @@ import java.sql.SQLException;
 
 /**
  * @author 董晋坤
- * 创建数据库连接类  实现项目和数据库的连接
+ *  创建数据库连接类  实现项目和数据库的连接  
+ *   定义增删改 查询的方法
  */
 public class DBcoon {
 	static String url = "jdbc:mysql//localhost:3306/trip_advisor_blog?useUnicode=true&characterEncoding = utf-8 & autoReconnect=true & useSSL=false & serverTimezone=GTM";
