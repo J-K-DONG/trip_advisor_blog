@@ -1,5 +1,10 @@
-package com.advising.trip.user;
+package com.advisor.trip.user;
 
+
+/**
+ * @author 董晋坤
+ * 定义用户类 声明用户的类属性并添加个属性的get set方法
+ */
 public class User {
 	private int id;
 	private String name;

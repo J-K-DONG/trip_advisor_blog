@@ -3,31 +3,36 @@
   <display-name>trip_advisor_blog</display-name>
   <filter>
     <filter-name>EncodingFilter</filter-name>
-    <filter-class>com.advising.trip.util.EncodingFilter</filter-class>
+    <filter-class>com.advising.trip.util.filter.EncodingFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>EncodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>com.advising.trip.util.filter.AuthFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>IpFilter</filter-name>
+    <filter-class>com.advising.trip.util.filter.IpFilter</filter-class>
+    <init-param>
+      <param-name>IPBlackList</param-name>
+      <param-value></param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>IpFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>com.advising.trip.util.listener.LoggedUserCounter</listener-class>
+  </listener>
   <welcome-file-list>
-
     <welcome-file>login.jsp</welcome-file>
-
   </welcome-file-list>
 </web-app>
