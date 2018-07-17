@@ -13,13 +13,13 @@ import java.sql.SQLException;
  *  创建数据库连接类  实现项目和数据库的连接  
  *   定义增删改 查询的方法
  */
-public class DBcoon {
-	static String url = "jdbc:mysql//localhost:3306/trip_advisor_blog?useUnicode=true&characterEncoding = utf-8 & autoReconnect=true & useSSL=false & serverTimezone=GTM";
+public class DBconn {
+	static String url = "jdbc:mysql://127.0.0.1:3306/trip_advisor_blog?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT";
 	static String user = "trip_admin";
 	static String password = "admin";
 	static Connection conn = null; //定义一个连接变量
 	static ResultSet rs = null; //定义一个结果集变量
-	static PreparedStatement ps = null;
+	static PreparedStatement ps = null;//SQL预编译后的变量
 	
 	
 	//数据库初始化驱动方法
@@ -52,7 +52,7 @@ public class DBcoon {
 	
 	
 	//关闭连接方法
-	public static void closeConn(String sql) {
+	public static void closeConn() {
 		try {
 			conn.close();
 		} catch (SQLException e) {

@@ -1,4 +1,4 @@
-package com.advisor.trip.user;
+package com.advisor.trip.entity.user;
 
 
 /**
