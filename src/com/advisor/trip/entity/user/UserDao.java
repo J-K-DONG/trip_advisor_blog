@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.advisor.trip.util.DB.DBconn;
+import com.mysql.cj.util.EscapeTokenizer;
 
 /**
  * @author 董晋坤
@@ -65,12 +66,12 @@ public class UserDao {
 			if (rs.next()) {
 				throw new NameAlreadyExistException("用户名 " + user.getName() + "已存在!");
 			}else {
-				String sql_add = "insert into user(name, password, sex, phonenum, info, location) " + "values('" 
+				String sql_add = "insert into user(name, password, sex, location, phonenum) " + "values('" 
 						+ user.getName() + "', '" 
 						+ user.getPassword() + "', '" 
 						+ user.getSex() + "', '" 
-						+ user.getPhonenum() + "', 'null', '" 
-						+ user.getLocation() + "')";
+						+ user.getLocation() + "', '"
+						+ user.getPhonenum() + "')";
 				int i = DBconn.addUpdDel(sql_add);
 				if (i>0) {
 					flag = true;
@@ -84,9 +85,82 @@ public class UserDao {
 	}
 	
 	
-	//
+	/**
+	 * @param username
+	 * @return 提取用户的信息
+	 */
+	public static User getUserInfo(String username) {
+		User user = new User();
+		DBconn.init();
+		try {
+			String sql = "select * from user where username = '" + username + "'";
+			ResultSet rs = DBconn.selectSql(sql);
+			if (rs != null) {
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setPassword(rs.getString("password"));
+				user.setSex(rs.getInt("sex"));
+				user.setLocation(rs.getString("location"));
+				user.setInfo(rs.getString("info"));
+				user.setPhonenum(rs.getString("phonenum"));
+				
+			} else {
+				System.out.println("用户不存在");
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL语句异常");
+			e.printStackTrace();
+		}finally {
+			DBconn.closeConn();
+		}
+		return user;
+	}
 	
 	
+	
+	/**
+	 * @param user
+	 * @return 返回更新后的user对象
+	 */
+	public static User update(User user) {
+		User u = new User();
+		DBconn.init();
+		String sql_update = "update user set "
+				+ "name='" + user.getName() + "' "
+				+ "password='" + user.getPassword() + "' "
+				+ "sex='" + user.getSex() + "' "
+				+ "location='" + user.getLocation() + "' "
+				+ "info='" + user.getInfo() + "' "
+				+ "phonenum='" + user.getPhonenum() + "' "
+				+ "portrait='"+ user.getPortrait() + "' where from id =" + user.getId();
+		int i = DBconn.addUpdDel(sql_update);
+		if (i > 0) {
+			System.out.println("数据库更新成功");
+		}	
+		
+		try {
+			String sql_select = "select * from user where id=" + user.getId();
+			ResultSet rs = DBconn.selectSql(sql_select);
+			if (rs != null) {
+				u.setId(rs.getInt("id"));
+				u.setName(rs.getString("name"));
+				u.setPassword(rs.getString("password"));
+				u.setSex(rs.getInt("sex"));
+				u.setLocation(rs.getString("location"));
+				u.setInfo(rs.getString("info"));
+				u.setPhonenum(rs.getString("phonenum"));
+				u.setPortrait(rs.getString("portrait"));
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			DBconn.closeConn();
+		}
+		
+		return u;
+	}
 	
 	
 }

@@ -25,9 +25,15 @@ public class RegisterServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		int sex;
 		String name = request.getParameter("userName");
 		String password = request.getParameter("password");
-		String sex = request.getParameter("sex");
+		String sex_temp = request.getParameter("sex");
+		if(sex_temp.equals("ÄÐ")) {
+			sex = 1;
+		}else {
+			sex = 0;
+		}
 		String location = request.getParameter("location");
 		String phonenum = request.getParameter("phoneNum");
 		User u = new User();
