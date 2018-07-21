@@ -6,8 +6,9 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 /**
+ * @author JK_DONG
  * Application Lifecycle Listener implementation class LoggedUserCounter
- *   监听用户的连接情况  统计连接的数量
+ * TODO  监听用户的连接情况  统计连接的数量
  */
 
 public class LoggedUserCounter implements HttpSessionListener, HttpSessionAttributeListener {

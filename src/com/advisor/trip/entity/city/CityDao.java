@@ -2,17 +2,28 @@ package com.advisor.trip.entity.city;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.advisor.trip.entity.user.User;
 import com.advisor.trip.util.DB.DBconn;
+import com.sun.org.apache.regexp.internal.recompile;
 
+/**
+ * @author 董晋坤
+ * TODO 对city的基本操作方法
+ */
 public class CityDao {
 
-	public static boolean addCity(String city) {
+	/**发布游记时进行city表的记录的增加（插入一条新的记录或者更新记录的number）
+	 * @param city
+	 */
+	public static void addCity(String city) {
 		
 		int i;
 		int id;
 		int number;
-		boolean flag = false;
+//		boolean flag = false;
 		String sql_update;
 		DBconn.init();
 		try {
@@ -30,7 +41,7 @@ public class CityDao {
 			}
 			i = DBconn.addUpdDel(sql_update);
 			if (i != 0) {
-				flag = true;
+//				flag = true;
 				System.out.println("更新城市信息成功");
 			}else {
 				System.out.println("更新城市信息失败");
@@ -42,14 +53,17 @@ public class CityDao {
 			DBconn.closeConn();
 		}
 		
-		return flag;
+//		return flag;
 	}
 	
 	
 	
-	public static boolean delete(String city) {
+	/**删除游记的时候对city表的记录进行删减
+	 * @param city
+	 */
+	public static void delete(String city) {
 		
-		boolean flag = false;
+//		boolean flag = false;
 		int i;
 		int id;
 		int number;
@@ -71,7 +85,7 @@ public class CityDao {
 
 			i = DBconn.addUpdDel(sql_update);
 			if(i != 0) {
-				flag = true;
+//				flag = true;
 				System.out.println("城市游记数量修改成功！");
 			}else {
 				System.out.println("城市游记数量修改失败！");
@@ -83,7 +97,39 @@ public class CityDao {
 			DBconn.closeConn();	
 		}
 				
-		return flag;
+//		return flag;
 	}
+
+	
+	/** 搜索出所有的city
+	 * @return
+	 */
+	public static List<City> showAllCity() {
 		
+		List<City> list = new ArrayList<City>();
+		DBconn.init();
+		try {
+			String sql = "select * from city";
+			ResultSet rs = DBconn.selectSql(sql);
+			while(rs.next()) {
+				City city = new City();
+				city.setId(rs.getInt("id"));
+				city.setName(rs.getString("name"));
+				city.setNumber(rs.getInt("number"));
+				list.add(city);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			DBconn.closeConn();
+		}
+		
+		return list;
+	}
+	
+	
+	
+	
 }
+
+

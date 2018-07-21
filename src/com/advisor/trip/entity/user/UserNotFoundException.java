@@ -1,7 +1,7 @@
 package com.advisor.trip.entity.user;
 
 /**
- * @author 董晋坤
+ * @author JK_DONG
  * 定义用户找不到的异常处理类
  */
 public class UserNotFoundException extends RuntimeException {

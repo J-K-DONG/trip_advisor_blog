@@ -3,7 +3,7 @@ package com.advisor.trip.entity.blog;
 import java.sql.Timestamp;
 
 /**
- * @author ¶­½úÀ¤
+ * @author JK_DONG
  *	blogÊý¾Ý¿â×Ö¶Î
  */
 public class Blog {

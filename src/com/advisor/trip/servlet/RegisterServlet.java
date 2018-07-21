@@ -12,7 +12,7 @@ import com.advisor.trip.entity.user.User;
 import com.advisor.trip.entity.user.UserDao;
 
 /**
- * @author ¶­½úÀ¤
+ * @author JK_DONG
  *	Servlet implementation class Register
  */
 @WebServlet("/RegisterServlet")
@@ -35,7 +35,9 @@ public class RegisterServlet extends HttpServlet {
 			sex = 0;
 		}
 		String location = request.getParameter("location");
-		String phonenum = request.getParameter("phoneNum");
+		String phonenum_temp = request.getParameter("phoneNum");
+		int phonenum = Integer.parseInt(phonenum_temp);
+		
 		User u = new User();
 		u.setName(name);
 		u.setPassword(password);

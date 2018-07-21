@@ -9,8 +9,8 @@ import java.sql.SQLException;
 
 
 /**
- * @author 董晋坤
- *  创建数据库连接类  实现项目和数据库的连接  
+ * @author JK_DONG
+ * TODO  创建数据库连接类  实现项目和数据库的连接  
  *   定义增删改 查询的方法
  */
 public class DBconn {

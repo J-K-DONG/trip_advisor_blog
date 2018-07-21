@@ -1,8 +1,8 @@
 package com.advisor.trip.entity.city;
 
 /**
- * @author 董晋坤
- *	城市数据库的字段
+ * @author JK_DONG
+ *	city 数据库的字段
  */
 public class City {
 	

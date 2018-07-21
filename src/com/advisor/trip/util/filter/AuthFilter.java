@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 
 /**
- * @author 董晋坤
- * 身份过滤器
+ * @author JK_DONG
+ * TODO 身份过滤器
  */
 public class AuthFilter implements Filter {
 

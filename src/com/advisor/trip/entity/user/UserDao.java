@@ -4,10 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.advisor.trip.util.DB.DBconn;
-import com.mysql.cj.util.EscapeTokenizer;
 
 /**
- * @author 董晋坤
+ * @author JK_DONG
  *对用户类的基本操作方法
  */
 public class UserDao {
@@ -102,7 +101,7 @@ public class UserDao {
 				user.setSex(rs.getInt("sex"));
 				user.setLocation(rs.getString("location"));
 				user.setInfo(rs.getString("info"));
-				user.setPhonenum(rs.getString("phonenum"));
+				user.setPhonenum(rs.getInt("phonenum"));
 				
 			} else {
 				System.out.println("用户不存在");
@@ -148,7 +147,7 @@ public class UserDao {
 				u.setSex(rs.getInt("sex"));
 				u.setLocation(rs.getString("location"));
 				u.setInfo(rs.getString("info"));
-				u.setPhonenum(rs.getString("phonenum"));
+				u.setPhonenum(rs.getInt("phonenum"));
 				u.setPortrait(rs.getString("portrait"));
 				
 			}

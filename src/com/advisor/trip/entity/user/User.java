@@ -2,13 +2,10 @@ package com.advisor.trip.entity.user;
 
 
 /**
- * @author 董晋坤
+ * @author JK_DONG
  * 定义用户类 声明用户的类属性并添加个属性的get set方法
  */
-/**
- * @author 董晋坤
- *
- */
+
 public class User {
 	private int id;
 	private String name;
@@ -16,7 +13,7 @@ public class User {
 	private int sex;
 	private String location;
 	private String info;
-	private String phonenum;
+	private int phonenum;
 	private String portrait;
 	
 	public int getId() {
@@ -55,10 +52,10 @@ public class User {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	public String getPhonenum() {
+	public int getPhonenum() {
 		return phonenum;
 	}
-	public void setPhonenum(String phonenum) {
+	public void setPhonenum(int phonenum) {
 		this.phonenum = phonenum;
 	}
 	public String getPortrait() {
