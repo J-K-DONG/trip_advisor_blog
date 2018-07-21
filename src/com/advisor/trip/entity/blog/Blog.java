@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 public class Blog {
 	private int id;
 	private String title;
-	private String author;
 	private String title_image;
 	private Timestamp created_time;
 	private Timestamp modified_time;
@@ -31,12 +30,6 @@ public class Blog {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public String getAuthor() {
-		return author;
-	}
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 	public String getTitle_image() {
 		return title_image;

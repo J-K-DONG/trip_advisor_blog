@@ -61,17 +61,16 @@ public class CityDao {
 	/**删除游记的时候对city表的记录进行删减
 	 * @param city
 	 */
-	public static void delete(String city) {
+	public static Boolean delete(int id) {
 		
-//		boolean flag = false;
+		boolean flag = false;
 		int i;
-		int id;
 		int number;
 		String sql_update;
 		DBconn.init();
 		
 		try {
-			String sql_select = "select * from city where name='" + city + "'";
+			String sql_select = "select * from city where id=" + id;
 			ResultSet rs = DBconn.selectSql(sql_select);
 			id = rs.getInt("id");
 			number = rs.getInt("number");
@@ -85,7 +84,7 @@ public class CityDao {
 
 			i = DBconn.addUpdDel(sql_update);
 			if(i != 0) {
-//				flag = true;
+				flag = true;
 				System.out.println("城市游记数量修改成功！");
 			}else {
 				System.out.println("城市游记数量修改失败！");
@@ -97,7 +96,7 @@ public class CityDao {
 			DBconn.closeConn();	
 		}
 				
-//		return flag;
+		return flag;
 	}
 
 	

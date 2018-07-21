@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.advisor.trip.entity.blogtouser.BlogToUser;
 import com.advisor.trip.entity.blogtouser.BlogToUserDao;
+import com.advisor.trip.service.CollectService;
 import com.mysql.cj.protocol.a.NativeConstants.IntegerDataType;
 import com.oracle.jrockit.jfr.RequestableEvent;
 
@@ -36,10 +37,10 @@ public class CollectServlet extends HttpServlet {
 		int user_id = Integer.parseInt(user_id_temp);
 		int blog_id = Integer.parseInt(blog_id_temp);
 		if (method.equals("collect")) {
-			BlogToUserDao.collect(user_id, blog_id);
+			CollectService.doCollect(user_id, blog_id);
 			request.setAttribute("״̬", 1);
 		}else if (method.equals("cancelCollect")) {
-			BlogToUserDao.cancelCollect(user_id, blog_id);
+			CollectService.doCancel(user_id, blog_id);
 			request.setAttribute("״̬", 0);
 		}
 		

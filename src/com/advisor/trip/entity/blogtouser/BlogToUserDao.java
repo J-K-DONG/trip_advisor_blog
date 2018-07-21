@@ -9,8 +9,15 @@ import java.sql.ResultSet;
 
 import com.advisor.trip.util.DB.DBconn;
 
+import jdk.nashorn.internal.ir.Flags;
+
 public class BlogToUserDao {
 	
+	/** 添加收藏记录
+	 * @param user_id
+	 * @param blog_id
+	 * @return
+	 */
 	public static boolean collect(int user_id, int blog_id) {
 		
 		boolean flag = false;
@@ -28,6 +35,11 @@ public class BlogToUserDao {
 	
 	
 	
+	/** 取消收藏 即删除该条记录
+	 * @param user_id
+	 * @param blog_id
+	 * @return
+	 */
 	public static boolean cancelCollect(int user_id, int blog_id) {
 		boolean flag = false;
 		DBconn.init();
@@ -44,6 +56,31 @@ public class BlogToUserDao {
 	
 	
 	
+	/** 删除一篇游记的所有收藏记录
+	 * @param blog_id
+	 * @return
+	 */
+	public static boolean cancelBlogCollect(int blog_id) {
+		
+		boolean flag = false;
+		DBconn.init();
+		String sql = "delete from blog_to_user where blog_id=" + blog_id;
+		int i = DBconn.addUpdDel(sql);
+		if (i > 0) {
+			flag = true;
+		}
+		
+		DBconn.closeConn();
+		return flag;
+	}
+	
+	
+	
+	/** 查询收藏的记录 返回记录集合
+	 * @param id_name
+	 * @param id_value
+	 * @return
+	 */
 	public static ResultSet getRecord(String id_name, int id_value){
 		
 		DBconn.init();

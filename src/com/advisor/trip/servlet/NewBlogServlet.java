@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.advisor.trip.entity.blog.Blog;
 import com.advisor.trip.entity.blog.BlogDao;
+import com.advisor.trip.service.BlogService;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -66,14 +67,13 @@ public class NewBlogServlet extends HttpServlet {
 //		int star = Integer.parseInt(star_temp);
 		Blog blog = new Blog();
 		blog.setTitle(title);
-		blog.setAuthor(author);
 		blog.setTitle_image(title_image);
 		blog.setContent(content);
 		blog.setPageview(pageview);
 		blog.setStar(star);
 		
 		
-		if (BlogDao.newBlog(blog, city, author)) {
+		if (BlogService.newBlog(blog, city, author)) {
 			System.out.println("新建成功");
 			request.getRequestDispatcher("游记详情页面.jsp").forward(request, response);
 		}else {

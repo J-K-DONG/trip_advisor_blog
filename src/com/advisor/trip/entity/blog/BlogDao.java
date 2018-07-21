@@ -22,11 +22,11 @@ public class BlogDao {
 	 * @param author
 	 * @return
 	 */
-	public static boolean newBlog(Blog blog, String city, String author) {
+	public static boolean add(Blog blog, int blogBelongCity, int blogBelongUser) {
 		
 		Boolean flag = false;
-		int blogBelongCity = 0;
-		int blogBelongUser = 0;
+//		int blogBelongCity = 0;
+//		int blogBelongUser = 0;
 		
 		System.out.println("数据库建立连接");
 		DBconn.init();
@@ -37,43 +37,40 @@ public class BlogDao {
 //		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 			
-		try {
-			//get blogBelongCity
-			CityDao.addCity(city);
-			String sql_city = "select * from city where name='" + city + "'";
-			ResultSet rs_city = DBconn.selectSql(sql_city);
-			blogBelongCity = rs_city.getInt("id");
+		
+//		//get blogBelongCity
+//		CityDao.addCity(city);
+//		String sql_city = "select * from city where name='" + city + "'";
+//		ResultSet rs_city = DBconn.selectSql(sql_city);
+//		blogBelongCity = rs_city.getInt("id");
+//
+//		//get blogBelongUser
+//		String sql_user = "select * from user where name='" + author + "'";
+//		ResultSet rs_user = DBconn.selectSql(sql_user);
+//		blogBelongUser = rs_user.getInt("id");
 
-			//get blogBelongUser
-			String sql_user = "select * from user where name='" + author + "'";
-			ResultSet rs_user = DBconn.selectSql(sql_user);
-			blogBelongUser = rs_user.getInt("id");
-
-			String sql = "insert into blog(title,author,title_image,created_time,modified_time,"
-					+ "content,pageview,star,blogBelongCity,blogBelongUser) values('"
-					+ blog.getTitle() + "', '"
-					+ blog.getAuthor() + "', '"
-					+ blog.getTitle_image() + "', '"
-					+ timestamp + "', 'null', "
-					+ blog.getContent() + "', '"
-					+ blog.getPageview() + "', '"
-					+ blog.getStar() + "', '"
-					+ blogBelongCity + "', '"
-					+ blogBelongUser + "')";
-			
-			int i = DBconn.addUpdDel(sql);
-			if (i == 0) {
-				System.out.println("数据库没有改变");
-			}else {
-				flag = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			System.out.println("数据库连接关闭");
-			DBconn.closeConn();
+		String sql = "insert into blog(title,title_image,created_time,modified_time,"
+				+ "content,pageview,star,blogBelongCity,blogBelongUser) values('"
+				+ blog.getTitle() + "', '"
+				+ blog.getTitle_image() + "', '"
+				+ timestamp + "', 'null', "
+				+ blog.getContent() + "', '"
+				+ blog.getPageview() + "', '"
+				+ blog.getStar() + "', '"
+				+ blogBelongCity + "', '"
+				+ blogBelongUser + "')";
+		
+		int i = DBconn.addUpdDel(sql);
+		if (i == 0) {
+			System.out.println("数据库没有改变");
+		}else {
+			flag = true;
+			System.out.println("数据库有更改");
 		}
-			
+	
+		System.out.println("数据库连接关闭");
+		DBconn.closeConn();
+		
 		return flag;
 	}
 	
@@ -91,7 +88,6 @@ public class BlogDao {
 			ResultSet rs = DBconn.selectSql(sql);
 			blog = new Blog();
 			blog.setTitle(rs.getString("title"));
-			blog.setAuthor(rs.getString("author"));
 			blog.setTitle(rs.getString("title_image"));
 			blog.setCreated_time(rs.getTimestamp("created_time"));
 			blog.setModified_time(rs.getTimestamp("modified_time"));

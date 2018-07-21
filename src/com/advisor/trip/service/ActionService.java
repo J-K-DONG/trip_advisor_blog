@@ -14,13 +14,37 @@ import org.apache.catalina.valves.rewrite.Substitution.StaticElement;
 import org.apache.taglibs.standard.lang.jstl.test.beans.PublicInterface2;
 
 import com.advisor.trip.entity.blog.Blog;
+import com.advisor.trip.entity.blog.BlogDao;
 import com.advisor.trip.entity.blogtouser.BlogToUserDao;
 import com.advisor.trip.util.DB.DBconn;
 
 
-public class Service {
+public class ActionService {
 	
-	/** 通过用户id查询用户自己收藏的blog集合
+	
+	/** 查询一篇游记 并判断是否需要增加pageview
+	 * @param user_id
+	 * @param blog_id
+	 * @return blog对象
+	 */
+	public static Blog getOneBlog(int user_id, int blog_id) {
+		
+		Blog blog = BlogDao.getBlog(blog_id);
+		int blogBelongUser = blog.getBlogBelongUser();
+		
+		if (user_id != blogBelongUser) {
+			
+		int pageview = blog.getPageview();
+		pageview = pageview + 1;
+		blog.setPageview(pageview);
+		}
+		
+		return blog;
+	}
+	
+	
+	
+	/** 通过用户id查询收藏的blog集合
 	 * @param user_id
 	 * @return blog对象的数组
 	 */
@@ -39,7 +63,6 @@ public class Service {
 				ResultSet rSet = DBconn.selectSql(sql);
 				Blog blog = new Blog();
 				blog.setTitle(rSet.getString("title"));
-				blog.setAuthor(rSet.getString("author"));
 				blog.setTitle_image(rSet.getString("title_image"));
 				blog.setCreated_time(rSet.getTimestamp("created_time"));
 				blog.setModified_time(rSet.getTimestamp("modified_time"));
@@ -78,7 +101,6 @@ public class Service {
 			while(rs_blog.next()) {
 				Blog blog = new Blog();
 				blog.setTitle(rs_blog.getString("title"));
-				blog.setAuthor(rs_blog.getString("author"));
 				blog.setTitle_image(rs_blog.getString("title_image"));
 				blog.setCreated_time(rs_blog.getTimestamp("created_time"));
 				blog.setModified_time(rs_blog.getTimestamp("modified_time"));
@@ -114,7 +136,6 @@ public class Service {
 			while (rs.next()) {
 				Blog blog = new Blog();
 				blog.setTitle(rs.getString("title"));
-				blog.setAuthor(rs.getString("author"));
 				blog.setTitle_image(rs.getString("title_image"));
 				blog.setCreated_time(rs.getTimestamp("created_time"));
 				blog.setModified_time(rs.getTimestamp("modified_time"));

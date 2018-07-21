@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.advisor.trip.entity.blog.Blog;
 import com.advisor.trip.entity.blog.BlogDao;
-import com.advisor.trip.service.Service;
+import com.advisor.trip.service.ActionService;
 
 
 /**
@@ -23,7 +23,7 @@ import com.advisor.trip.service.Service;
  * ·对用前端的响应：
  * 
  * 1.查看单篇游记详情页面：
- * 	通过blog表单的主键id 来查询blog表单对应的一条记录 得到游记对象并返回前端详情页
+ * 	通过blog表单的主键id 来查询blog表单对应的一条记录 得到游记对象并返回前端详情页（判断是否需要增加pageview）
  * 
  * 2.查看通过city查询的多篇游记结果页面：
  * 	通过city的name字段 先查新city表 找到对应记录的id主键  然后通过对应的外键blogBelongCity 去查询blog表单对应的记录 遍历记录得到blog对象集合 最后返回
@@ -45,26 +45,29 @@ public class ShowBlogServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		String user_id_temp = request.getParameter("user_id");
+		int user_id = Integer.parseInt(user_id_temp);
 		String cond = request.getParameter("condition");
 		String value = request.getParameter(cond); 
 		List<Blog> list = new ArrayList<>();
 		
 		if(cond.equals("id")) {
 			
-			int id = Integer.parseInt(value);
-			Blog blog = BlogDao.getBlog(id);
+			int blog_id = Integer.parseInt(value);
+			Blog blog = ActionService.getOneBlog(user_id, blog_id);
 			request.setAttribute("blog", blog);
-			request.getRequestDispatcher("游记详情页.jsp").forward(request, response);			
+			request.getRequestDispatcher("游记详情页.jsp").forward(request, response);	
+			
 		}else {
 			if (cond.equals("city")) {
 			
-				list = Service.getCityBlog(value);//按城市搜索
+				list = ActionService.getCityBlog(value);//按城市搜索
 			}else if (cond.equals("user")) {
 				int id = Integer.parseInt(value);//按用户搜索
-				list = Service.getUserBlog(id);
+				list = ActionService.getUserBlog(id);
 			}else if (cond.equals("collect")) {
 				int id = Integer.parseInt(value);//按用户搜索收藏
-				list = Service.getCollectBlog(id);
+				list = ActionService.getCollectBlog(id);
 			}
 			
 			request.setAttribute("游记名称", list);
