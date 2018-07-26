@@ -33,7 +33,7 @@ public class UserDao {
 					throw new PasswordNotCorrectException("密码不正确！");
 				}
 //			u = new User();
-//			u.setId((int)rs.getInt("id"));
+//			u.setId(rs.getInt("id"));
 //			u.setName(rs.getString("name"));
 //			u.setSex(rs.getString("sex"));	
 //			u.setPassword(rs.getString("password"));
@@ -65,12 +65,13 @@ public class UserDao {
 			if (rs.next()) {
 				throw new NameAlreadyExistException("用户名 " + user.getName() + "已存在!");
 			}else {
-				String sql_add = "insert into user(name, password, sex, location, phonenum) " + "values('" 
+				String sql_add = "insert into user(name, password, sex, location, phonenum, email) " + "values('" 
 						+ user.getName() + "', '" 
 						+ user.getPassword() + "', '" 
 						+ user.getSex() + "', '" 
 						+ user.getLocation() + "', '"
-						+ user.getPhonenum() + "')";
+						+ user.getPhonenum() + "', '"
+						+ user.getEmail() + "')";
 				int i = DBconn.addUpdDel(sql_add);
 				if (i>0) {
 					flag = true;
@@ -88,20 +89,21 @@ public class UserDao {
 	 * @param username
 	 * @return 提取用户的信息
 	 */
-	public static User getUserInfo(String username) {
+	public static User getUserInfo(int id) {
 		User user = new User();
 		DBconn.init();
 		try {
-			String sql = "select * from user where username = '" + username + "'";
+			String sql = "select * from user where id=" + id;
 			ResultSet rs = DBconn.selectSql(sql);
-			if (rs != null) {
+			if (rs.next()) {
 				user.setId(rs.getInt("id"));
 				user.setName(rs.getString("name"));
 				user.setPassword(rs.getString("password"));
 				user.setSex(rs.getInt("sex"));
 				user.setLocation(rs.getString("location"));
 				user.setInfo(rs.getString("info"));
-				user.setPhonenum(rs.getInt("phonenum"));
+				user.setPhonenum(rs.getString("phonenum"));
+				user.setEmail(rs.getString("email"));
 				
 			} else {
 				System.out.println("用户不存在");
@@ -116,7 +118,33 @@ public class UserDao {
 	}
 	
 	
-	
+	public static User getUserInfo(String name) {
+		User user = new User();
+		DBconn.init();
+		try {
+			String sql = "select * from user where name='" + name + "'";
+			ResultSet rs = DBconn.selectSql(sql);
+			if (rs.next()) {
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setPassword(rs.getString("password"));
+				user.setSex(rs.getInt("sex"));
+				user.setLocation(rs.getString("location"));
+				user.setInfo(rs.getString("info"));
+				user.setPhonenum(rs.getString("phonenum"));
+				user.setEmail(rs.getString("email"));
+				
+			} else {
+				System.out.println("用户不存在");
+			}
+		} catch (SQLException e) {
+			System.out.println("SQL语句异常");
+			e.printStackTrace();
+		}finally {
+			DBconn.closeConn();
+		}
+		return user;
+	}
 	/**
 	 * @param user
 	 * @return 返回更新后的user对象
@@ -124,32 +152,40 @@ public class UserDao {
 	public static User update(User user) {
 		User u = new User();
 		DBconn.init();
+		
+		System.out.println(user.getLocation());
+		
 		String sql_update = "update user set "
-				+ "name='" + user.getName() + "' "
-				+ "password='" + user.getPassword() + "' "
-				+ "sex='" + user.getSex() + "' "
-				+ "location='" + user.getLocation() + "' "
-				+ "info='" + user.getInfo() + "' "
-				+ "phonenum='" + user.getPhonenum() + "' "
-				+ "portrait='"+ user.getPortrait() + "' where from id =" + user.getId();
+				+ "name='" + user.getName() + "', "
+//				+ "password='" + user.getPassword() + "', "
+				+ "sex=" + user.getSex() + ", "
+				+ "location='" + user.getLocation() + "', "
+				+ "info='" + user.getInfo() + "', "
+				+ "phonenum='" + user.getPhonenum() + "', "
+				+ "portrait='"+ user.getPortrait() + "', "
+				+ "email='"+ user.getEmail() 
+				+ "' where id=" + user.getId();
 		int i = DBconn.addUpdDel(sql_update);
+		DBconn.closeConn();
 		if (i > 0) {
 			System.out.println("数据库更新成功");
 		}	
 		
 		try {
+			
+			DBconn.init();
 			String sql_select = "select * from user where id=" + user.getId();
 			ResultSet rs = DBconn.selectSql(sql_select);
-			if (rs != null) {
+			if (rs.next()) {
 				u.setId(rs.getInt("id"));
 				u.setName(rs.getString("name"));
 				u.setPassword(rs.getString("password"));
 				u.setSex(rs.getInt("sex"));
 				u.setLocation(rs.getString("location"));
 				u.setInfo(rs.getString("info"));
-				u.setPhonenum(rs.getInt("phonenum"));
+				u.setPhonenum(rs.getString("phonenum"));
 				u.setPortrait(rs.getString("portrait"));
-				
+				user.setEmail(rs.getString("email"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

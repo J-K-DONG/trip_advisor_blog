@@ -6,37 +6,45 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.advisor.trip.entity.user.User;
-import com.advisor.trip.entity.user.UserDao;
-import com.oracle.jrockit.jfr.RequestableEvent;
-
 
 /**
- * @author JK_DONG
- * Servlet implementation class ShowUserServlet
- * TODO 显示用户的个人信息 跳转到个人信息详情页面
+ * Servlet implementation class LogoutServlet
  */
-@WebServlet("/ShowUserServlet")
-public class ShowUserServlet extends HttpServlet {
+/**
+ * 2018年7月24日
+ * @author JK_DONG
+ * TODO
+ */
+@WebServlet("/LogoutServlet")
+public class LogoutServlet extends HttpServlet {
 
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
-	}
+		}
 
 
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		setSession(request, null, 0);
 		
-		String id_temp = request.getParameter("id");
-		int id = Integer.parseInt(id_temp);
-//		String name = "234";
-//		int id = 10;
-		User user = new User();
-		user = UserDao.getUserInfo(id);
-		System.out.println(user.getInfo());
-		request.setAttribute("user", user);
-		request.getRequestDispatcher("information.jsp").forward(request, response);
+		request.setAttribute("user", null);
+		request.getRequestDispatcher("index.jsp").forward(request, response);
 		
 	}
 
+	
+	
+	public void setSession(HttpServletRequest req, User uu, int i)
+    {
+    	HttpSession  hs = req.getSession(true);	
+    	String id = hs.getId();
+		hs.setMaxInactiveInterval(12*60);//设置会话时间
+		hs.setAttribute("User",uu);
+		hs.setAttribute("id",i);
+    }
 }

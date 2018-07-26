@@ -1,19 +1,14 @@
 package com.advisor.trip.servlet;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.advisor.trip.entity.blogtouser.BlogToUser;
-import com.advisor.trip.entity.blogtouser.BlogToUserDao;
 import com.advisor.trip.service.CollectService;
-import com.mysql.cj.protocol.a.NativeConstants.IntegerDataType;
-import com.oracle.jrockit.jfr.RequestableEvent;
-
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 
 /**
@@ -23,6 +18,12 @@ import jdk.nashorn.internal.ir.RuntimeNode.Request;
  */
 @WebServlet("/CollectServlet")
 public class CollectServlet extends HttpServlet {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -43,8 +44,7 @@ public class CollectServlet extends HttpServlet {
 			CollectService.doCancel(user_id, blog_id);
 			request.setAttribute("◊¥Ã¨", 0);
 		}
-		
-		request.getRequestDispatcher("”Œº«œÍ«È“≥.jsp").forward(request, response);
+		request.getRequestDispatcher("homepage.jsp").forward(request, response);
 		
 		
 	}

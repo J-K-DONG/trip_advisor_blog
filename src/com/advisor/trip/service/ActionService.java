@@ -8,15 +8,23 @@ package com.advisor.trip.service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.catalina.valves.rewrite.Substitution.StaticElement;
-import org.apache.taglibs.standard.lang.jstl.test.beans.PublicInterface2;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 
 import com.advisor.trip.entity.blog.Blog;
 import com.advisor.trip.entity.blog.BlogDao;
+import com.advisor.trip.entity.blogtouser.BlogToUser;
 import com.advisor.trip.entity.blogtouser.BlogToUserDao;
+import com.advisor.trip.entity.city.City;
+import com.advisor.trip.entity.city.CityDao;
+import com.advisor.trip.entity.user.User;
+import com.advisor.trip.entity.user.UserDao;
 import com.advisor.trip.util.DB.DBconn;
+
+import sun.launcher.resources.launcher;
 
 
 public class ActionService {
@@ -27,19 +35,43 @@ public class ActionService {
 	 * @param blog_id
 	 * @return blog对象
 	 */
-	public static Blog getOneBlog(int user_id, int blog_id) {
+	public static Map<String, Object> getOneBlog(int user_id, int blog_id) {
+		
+		Map<String,Object> map = new HashMap<String,Object>();
 		
 		Blog blog = BlogDao.getBlog(blog_id);
+		int blogBelongCity = blog.getBlogBelongCity();
+		City city = CityDao.getOneCity(blogBelongCity);
+		String city_name = city.getName();
 		int blogBelongUser = blog.getBlogBelongUser();
+		User user = UserDao.getUserInfo(blogBelongUser);
+		String user_name = user.getName();
+		
+		
 		
 		if (user_id != blogBelongUser) {
 			
-		int pageview = blog.getPageview();
-		pageview = pageview + 1;
-		blog.setPageview(pageview);
+			int pageview = blog.getPageview();
+			pageview = pageview + 1;
+			DBconn.init();
+			String sql_update = "update blog set pageview=" + pageview + " where id=" + blog_id;
+			int i = DBconn.addUpdDel(sql_update);
+			if (i > 0) {
+				blog.setPageview(pageview);
+			}
+			
 		}
 		
-		return blog;
+		
+		
+		
+		
+		map.put("blog", blog);
+		map.put("city_name", city_name);
+		map.put("user_name", user_name);
+		map.put("author_id", blogBelongUser);
+		
+		return map;
 	}
 	
 	
@@ -52,32 +84,68 @@ public class ActionService {
 		
 		int blog_id;
 		String sql = null;
-		String conditon = "user_id";
-		List<Blog> list = new ArrayList<Blog>();
+		List<BlogToUser> list_bto = new ArrayList<BlogToUser>();
 		DBconn.init();
 		try {
-			ResultSet rs = BlogToUserDao.getRecord(conditon, user_id);//通过用户id查询blog_to_user表单 找到关联的所有记录
+			String sql_collect = "select * from blog_to_user where user_id=" + user_id;
+			ResultSet rs = DBconn.selectSql(sql_collect);//通过用户id查询blog_to_user表单 找到关联的所有记录
 			while(rs.next()) {
-				blog_id = rs.getInt("blog_id");//读取每条记录中 blog_id 
-				sql = "select * from blog where id =" + blog_id; //通过之前获取的blog_id 来查询blog 表单的对应的blog记录
-				ResultSet rSet = DBconn.selectSql(sql);
-				Blog blog = new Blog();
-				blog.setTitle(rSet.getString("title"));
-				blog.setTitle_image(rSet.getString("title_image"));
-				blog.setCreated_time(rSet.getTimestamp("created_time"));
-				blog.setModified_time(rSet.getTimestamp("modified_time"));
-				blog.setContent(rSet.getString("content"));
-				blog.setPageview(rSet.getInt("pageview"));
-				blog.setStar(rSet.getInt("star"));
-				blog.setBlogBelongCity(rSet.getInt("blogBelongToCity"));
-				blog.setBlogBelongUser(rSet.getInt("blogBelongToUser"));
-				list.add(blog);
+//				blog_id = rs.getInt("blog_id");//读取每条记录中 blog_id 
+				BlogToUser bto = new BlogToUser();
+				bto.setId(rs.getInt("id"));
+				bto.setBlog_id(rs.getInt("blog_id"));
+				bto.setUser_id(rs.getInt("user_id"));
+				list_bto.add(bto);
+
+				
+//				blog = BlogDao.getBlog(blog_id);
+				
+				
 			}
+		
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
 			DBconn.closeConn();
 		}
+		
+		
+	
+		DBconn.init();
+		List<Blog> list = new ArrayList<Blog>();
+		
+		try {
+			for (BlogToUser bto_temp : list_bto){
+				blog_id = bto_temp.getBlog_id();
+				
+				
+				Blog blog = new Blog();
+				sql = "select * from blog where id =" + blog_id; //通过之前获取的blog_id 来查询blog 表单的对应的blog记录
+				ResultSet rSet = DBconn.selectSql(sql);
+				if (rSet.next()) {
+					
+					blog.setId(rSet.getInt("id"));
+					blog.setTitle(rSet.getString("title"));
+					blog.setTitle_image(rSet.getString("title_image"));
+					blog.setCreated_time(rSet.getTimestamp("created_time"));
+					blog.setModified_time(rSet.getTimestamp("modified_time"));
+					blog.setContent(rSet.getString("content"));
+					blog.setPageview(rSet.getInt("pageview"));
+					blog.setStar(rSet.getInt("star"));
+					blog.setBlogBelongCity(rSet.getInt("blogBelongCity"));
+					blog.setBlogBelongUser(rSet.getInt("blogBelongUser"));
+					list.add(blog);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBconn.closeConn();
+		}
+		
+		
+		
 		
 		return list;
 	}
@@ -91,25 +159,32 @@ public class ActionService {
 	public static List<Blog> getCityBlog(String city){
 		
 		List<Blog> list = new ArrayList<Blog>();
+//		list = null;
 		DBconn.init();
 		try {
 			String sql_city = "select * from city where name='" + city + "'";
 			ResultSet rs_city = DBconn.selectSql(sql_city);
-			int city_id = rs_city.getInt("id");
-			String sql_blog = "select * from blog where blogBelongCity=" + city_id;
-			ResultSet rs_blog = DBconn.selectSql(sql_blog);
-			while(rs_blog.next()) {
-				Blog blog = new Blog();
-				blog.setTitle(rs_blog.getString("title"));
-				blog.setTitle_image(rs_blog.getString("title_image"));
-				blog.setCreated_time(rs_blog.getTimestamp("created_time"));
-				blog.setModified_time(rs_blog.getTimestamp("modified_time"));
-				blog.setContent(rs_blog.getString("content"));
-				blog.setPageview(rs_blog.getInt("pageview"));
-				blog.setStar(rs_blog.getInt("star"));
-				blog.setBlogBelongCity(rs_blog.getInt("blogBelongCity"));
-				blog.setBlogBelongUser(rs_blog.getInt("blogBelongUser"));
-				list.add(blog);
+			if(!rs_city.next()) {
+//				return null;
+				
+			}else {
+				int city_id = rs_city.getInt("id");
+				String sql_blog = "select * from blog where blogBelongCity=" + city_id;
+				ResultSet rs_blog = DBconn.selectSql(sql_blog);
+				while(rs_blog.next()) {
+					Blog blog = new Blog();
+					blog.setId(rs_blog.getInt("id"));
+					blog.setTitle(rs_blog.getString("title"));
+					blog.setTitle_image(rs_blog.getString("title_image"));
+					blog.setCreated_time(rs_blog.getTimestamp("created_time"));
+					blog.setModified_time(rs_blog.getTimestamp("modified_time"));
+					blog.setContent(rs_blog.getString("content"));
+					blog.setPageview(rs_blog.getInt("pageview"));
+					blog.setStar(rs_blog.getInt("star"));
+					blog.setBlogBelongCity(rs_blog.getInt("blogBelongCity"));
+					blog.setBlogBelongUser(rs_blog.getInt("blogBelongUser"));
+					list.add(blog);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,10 +206,12 @@ public class ActionService {
 		
 		List<Blog> list = new ArrayList<Blog>();
 		try {
+			DBconn.init();
 			String sql = "select * from blog where blogBelongUser=" + id;
 			ResultSet rs = DBconn.selectSql(sql);
 			while (rs.next()) {
 				Blog blog = new Blog();
+				blog.setId(rs.getInt("id"));
 				blog.setTitle(rs.getString("title"));
 				blog.setTitle_image(rs.getString("title_image"));
 				blog.setCreated_time(rs.getTimestamp("created_time"));

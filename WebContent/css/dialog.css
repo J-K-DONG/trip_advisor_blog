@@ -1,0 +1,110 @@
+ *{
+     padding: 0;
+     margin: 0;
+}
+body{
+    padding: 0px;
+    /* background: url() 0 0 no-repeat; */
+    background-size: cover;
+}
+.modal-backdrop{
+    background-color: rgba(0, 0, 0, 0) !important;
+    z-index: 0 !important;
+}
+.demo{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.demo #button1{
+    width: 70px;
+    height: 30px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    background: yellow;
+    margin: 20px 0 0 40px;
+    position: relative;
+    border: 0;
+    box-shadow:  2px 2px 10px red;
+    -webkit-box-shadow:  2px 2px 10px red;
+    -moz-box-shadow:  2px 2px 10px red;
+}
+.demo-txt{
+    position: relative;
+    z-index: 1;
+    color: #000;
+    background: white;
+    width: 40.5%;
+    height: 1000px;
+    margin:auto;
+	left: 0;
+    right: 0;
+    bottom: 0;
+    top: 10px;
+    display: none;
+    padding: 10px;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+}
+.demo-txt .title-img {
+    height: 220px;
+    width: 700px;
+    background-color: #ccc;
+    margin: 0 auto;
+    border-radius:1em;
+}
+
+#aimg{
+  height:220px;
+  width:700px;
+  float: right;
+}
+ #simg{
+          height:220px;
+          width:700px;
+          border:1px solid #000;
+          background-color: #ccc;
+          text-align: center;
+          margin-bottom: 10px;
+
+        }
+.demo-txt .title-img input{
+    position: absolute;
+    margin-top: 90px;
+    margin-left: 300px;
+
+
+}
+.demo-txt .title .title-input #title{
+	height: 40px;
+	width: 600px;
+    font-family: Serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+.demo-txt .title .title-input #destination{
+    height: 40px;
+    width: 140px;
+    font-family: Serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+.demo-txt .btn ul{
+    padding: 0;
+    margin-left: 540px;
+}
+.demo-txt .btn ul li{
+    display:inline-block;
+    margin:0 0.5em;
+}
+.demo-txt .btn ul li:nth-child(4){
+    margin-right:0;
+}
+.demo-txt .btn ul li button{
+    height: 33px;
+    width: 59px;
+    color:#000001;
+    font-size:1em;
+}

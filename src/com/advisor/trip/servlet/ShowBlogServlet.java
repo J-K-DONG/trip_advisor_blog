@@ -3,6 +3,7 @@ package com.advisor.trip.servlet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.advisor.trip.entity.blog.Blog;
 import com.advisor.trip.entity.blog.BlogDao;
+import com.advisor.trip.entity.page.Page;
 import com.advisor.trip.service.ActionService;
+import com.advisor.trip.util.sort.Sort;
 
 
 /**
@@ -41,7 +44,9 @@ public class ShowBlogServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
-
+	
+	
+	
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -49,18 +54,48 @@ public class ShowBlogServlet extends HttpServlet {
 		int user_id = Integer.parseInt(user_id_temp);
 		String cond = request.getParameter("condition");
 		String value = request.getParameter(cond); 
-		List<Blog> list = new ArrayList<>();
+		List<Blog> list = new ArrayList<Blog>();
+		List<Blog> list_sorted = new ArrayList<Blog>();
+		List<Blog> list_4 = new ArrayList<Blog>();
+		
+		
+		System.out.println("111");//testing
 		
 		if(cond.equals("id")) {
 			
 			int blog_id = Integer.parseInt(value);
-			Blog blog = ActionService.getOneBlog(user_id, blog_id);
+			Map<String, Object> map = ActionService.getOneBlog(user_id, blog_id);
+			
+			
+			Blog blog = (Blog)map.get("blog");
+			String city_name = (String)map.get("city_name");
+			String user_name = (String)map.get("user_name");
+			int author_id = (int)map.get("author_id");
+			System.out.println(user_name);//testing
+			request.setAttribute("author_id", author_id);
+			request.setAttribute("user_name", user_name);
+			request.setAttribute("city_name", city_name);
 			request.setAttribute("blog", blog);
-			request.getRequestDispatcher("游记详情页.jsp").forward(request, response);	
+			request.getRequestDispatcher("single.jsp").forward(request, response);	
 			
-		}else {
+		}else {//查询多个游记结果
+			
+			
+			int pageNum = 1;
+			
+			String pageNum_temp = request.getParameter("pageNum");
+			if (pageNum_temp != null) {
+				pageNum = Integer.parseInt(pageNum_temp);
+			}
+			
+			
+			int start = pageNum * 4 - 4;//本页的第一条记录
+			
+			
+			
+			
+			
 			if (cond.equals("city")) {
-			
 				list = ActionService.getCityBlog(value);//按城市搜索
 			}else if (cond.equals("user")) {
 				int id = Integer.parseInt(value);//按用户搜索
@@ -68,16 +103,60 @@ public class ShowBlogServlet extends HttpServlet {
 			}else if (cond.equals("collect")) {
 				int id = Integer.parseInt(value);//按用户搜索收藏
 				list = ActionService.getCollectBlog(id);
+			}else if (cond.equals("all")) {
+				list = BlogDao.showAllBlog();
+			}
+	
+			list_sorted = Sort.bubbleSort(list);
+			
+			
+			
+			
+			int list_length = list_sorted.size();//总的查询记录数
+			
+			int list_last_length = list_length - start;
+			
+			if(list_last_length > 3) {
+				
+				list_4 = list_sorted.subList(start, start + 4); 
+			} else {
+				list_4 = list_sorted.subList(start, list_length);
 			}
 			
-			request.setAttribute("游记名称", list);
-			if (list != null) {
-					request.getRequestDispatcher("多条游记显示.jsp").forward(request, response);
+			int pageCount = (list_length - 1) / 4 + 1;
+			
+			Page page = new Page();
+			page.setPageNum(pageNum);//当前页数
+			page.setRecordCount(list_length);//查询结果总数
+			page.setPageCount(pageCount);//页面总数
+			page.setCondition(cond);
+			page.setValue(value);
+			
+			
+			
+			request.setAttribute("page", page);
+			request.setAttribute("list_4", list_4);
+			
+			if (list_4 != null) {
+					request.getRequestDispatcher("share.jsp").forward(request, response);
 			} else {
 				response.sendRedirect("搜索不到.jsp");
 			}
 			
 		}
+		
 	}
-
 }
+
+
+
+		
+		
+		
+
+		
+		
+		
+	
+
+

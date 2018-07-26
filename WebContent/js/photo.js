@@ -1,7 +1,7 @@
 
 
 function kk(){
-var aa = document.getElementById("nAme");
+var aa = document.getElementById("Name");
 var bb = document.getElementById("adr");
 var cc = document.getElementById("phone");
 var dd = document.getElementById("email");

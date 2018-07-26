@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@page import="com.advisor.trip.entity.user.*"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,29 +36,32 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Login In</title>
+
+
+
+<%User u = (User)session.getAttribute("User");
+				
+				int user_id;
+				String user_location;
+				if(u != null){
+					user_id = u.getId();
+					user_location = u.getLocation();
+				} else{
+					user_id = 0;
+					user_location = "北京";
+				}
+				%>
+				
+				
 </head>
 <body>
 	<!-- banner -->
 	<div class="banner about-bg">
-		<div class="top-banner about-top-banner">
-			<div class="container">
-				<div class="top-banner-left">
-					<ul>
-						<li><i class="fa fa-phone" aria-hidden="true"></i> +86 188
-							8888 8888</li>
-						<li><a href="mailto:example@email.com"><i
-								class="fa fa-envelope" aria-hidden="true"></i>
-								Student@ustb.edu.cn</a></li>
-					</ul>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-		</div>
 		<div class="header">
 			<div class="container">
 				<div class="logo">
 					<h1>
-						<a href="index.html" target="_blank">Our Trips</a>
+						<a href="index.jsp" target="_blank">Our Trips</a>
 					</h1>
 				</div>
 				<div class="top-nav">
@@ -69,16 +73,14 @@
 					<div class="collapse navbar-collapse"
 						id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
-							<li><a class="active" href="index.html">Home</a></li>
-							<li><a href="about.html">Destination</a></li>
-							<li><a href="services.html">Share</a></li>
-							<li><a href="loginin.html">Login In</a></li>
-							<div class="clearfix"></div>
+							<li><a href="index.jsp">Home</a></li>
+							<li><a href="destination.jsp">Destination</a></li>
+							<li><a href="ShowBlogServlet?user_id=<%=user_id%>&condition=all&pageNum=1">Recommend</a></li>
+							<li><a href="login.jsp">Login In</a></li>
 						</ul>
 					</div>
 					</nav>
 				</div>
-				<div class="clearfix"></div>
 			</div>
 		</div>
 	</div>
@@ -96,11 +98,11 @@
 					<form name="login" action="LoginServlet" class="login" method="post">
 						<!-- 用户名 -->
 						<div class="userName">
-							<span></span><input type="text" name="userName" placeholder="  ：用户名/邮箱/手机号">
+							<span></span><input type="text" name="userName" placeholder="用户名/邮箱/手机号">
 						</div>
 						<!-- 密码 -->
 						<div class="password">
-							<span></span><input type="password" name="password" placeholder="  ：输入密码">
+							<span></span><input type="password" name="password" placeholder="输入密码">
 						</div>
 						<!-- 登录按钮 -->
 						<div name="login_btn" class="login_btn">
@@ -120,7 +122,11 @@
 	<!-- //contact -->
 	<!-- footer -->
 	<div class="footer">
-		<div class="container"></div>
+		<div class="foot-area">
+			<div class="foot-txt">
+				<h4>Copyright  @  啥都不会的新人  2018/7</h4>
+			</div>
+		</div>
 	</div>
 	<!-- //footer -->
 </body>

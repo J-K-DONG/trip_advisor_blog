@@ -26,7 +26,7 @@ public class RegisterServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		int sex;
-		String name = request.getParameter("userName");
+		String name = request.getParameter("username");
 		String password = request.getParameter("password");
 		String sex_temp = request.getParameter("sex");
 		if(sex_temp.equals("ÄÐ")) {
@@ -35,8 +35,8 @@ public class RegisterServlet extends HttpServlet {
 			sex = 0;
 		}
 		String location = request.getParameter("location");
-		String phonenum_temp = request.getParameter("phoneNum");
-		int phonenum = Integer.parseInt(phonenum_temp);
+		String phonenum = request.getParameter("phonenum");
+		String email = request.getParameter("email");
 		
 		User u = new User();
 		u.setName(name);
@@ -44,6 +44,11 @@ public class RegisterServlet extends HttpServlet {
 		u.setSex(sex);
 		u.setLocation(location);
 		u.setPhonenum(phonenum);
+		u.setEmail(email);
+		
+		
+		
+		
 		if(UserDao.register(u)) {
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		}else {

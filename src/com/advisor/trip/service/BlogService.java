@@ -24,28 +24,33 @@ public class BlogService {
 	 * @param author
 	 * @return
 	 */
-	public static boolean newBlog(Blog blog, String city, String author){
+	public static boolean newBlog(Blog blog, String city){
 		
 		boolean flag = false;
-		
-		CityDao.addCity(city);
+		boolean flag_blog = false;
+		boolean flag_city = CityDao.addCity(city);
 		DBconn.init();
 		try {
 			String sql_city = "select * from city where name='" + city + "'";
 			ResultSet rs_city = DBconn.selectSql(sql_city);
-			int blogBelongCity = rs_city.getInt("id");
+			if (rs_city.next()) {
+				
+				int blogBelongCity = rs_city.getInt("id");
+				
+					
+					flag_blog = BlogDao.add(blog, blogBelongCity);
+					
+				
+			}
 			
-			String sql_user = "select * from user wehere name='" + author + "'";
-			ResultSet rs_user = DBconn.selectSql(sql_user);
-			int blogBelongUser = rs_user.getInt("id");
-			
-			flag = BlogDao.add(blog, blogBelongCity, blogBelongUser);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBconn.closeConn();
 		}
-		
+		if (flag_city && flag_blog) {
+			flag = true;
+		}
 		return flag;
 	}
 	

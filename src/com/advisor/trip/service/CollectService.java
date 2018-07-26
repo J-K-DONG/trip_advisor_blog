@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 import com.advisor.trip.entity.blogtouser.BlogToUserDao;
 import com.advisor.trip.util.DB.DBconn;
+import com.sun.org.apache.regexp.internal.recompile;
 
 /** 收藏功能
  * 2018年7月21日
@@ -24,25 +25,30 @@ public class CollectService {
 		boolean flag_co = false;
 		boolean flag_up = false;
 		flag_co = BlogToUserDao.collect(user_id, blog_id);
-		
-		DBconn.init();
-		try {
-			String sql = "select * from blog where id=" + blog_id;
-			ResultSet rs = DBconn.selectSql(sql);
-			int star = rs.getInt("star");
-			star = star + 1;
-			String sql_update = "update blog set star='" + star + "' where id =" + blog_id;
-			int i = DBconn.addUpdDel(sql_update);
-			if (i > 0) {
-				flag_up = true;
+		if (flag_co) {
+			
+			DBconn.init();
+			try {
+				String sql = "select * from blog where id=" + blog_id;
+				ResultSet rs = DBconn.selectSql(sql);
+				if (rs.next()) {
+					
+					int star = rs.getInt("star");
+					star = star + 1;
+					String sql_update = "update blog set star='" + star + "' where id =" + blog_id;
+					int i = DBconn.addUpdDel(sql_update);
+					if (i > 0) {
+						flag_up = true;
+					}
+					if (flag_co && flag_up) {
+						flag = true;
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				DBconn.closeConn();
 			}
-			if (flag_co && flag_up) {
-				flag = true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBconn.closeConn();
 		}
 		
 		return flag;
@@ -61,15 +67,18 @@ public class CollectService {
 		try {
 			String sql = "select * from blog where id=" + blog_id;
 			ResultSet rs = DBconn.selectSql(sql);
-			int star = rs.getInt("star");
-			star = star - 1;
-			String sql_update = "update blog set star='" + star + "' where id=" + user_id;
-			int i = DBconn.addUpdDel(sql_update);
-			if (i > 0) {
-				flag_up = true;
-			}
-			if (flag_co && flag_up) {
-				flag = true;
+			if (rs.next()) {
+				
+				int star = rs.getInt("star");
+				star = star - 1;
+				String sql_update = "update blog set star='" + star + "' where id=" + user_id;
+				int i = DBconn.addUpdDel(sql_update);
+				if (i > 0) {
+					flag_up = true;
+				}
+				if (flag_co && flag_up) {
+					flag = true;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

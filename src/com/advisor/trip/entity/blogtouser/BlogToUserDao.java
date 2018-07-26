@@ -6,10 +6,10 @@
 package com.advisor.trip.entity.blogtouser;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import com.advisor.trip.util.DB.DBconn;
-
-import jdk.nashorn.internal.ir.Flags;
+import com.mysql.cj.protocol.a.result.ResultsetRowsStreaming;
 
 public class BlogToUserDao {
 	
@@ -22,14 +22,29 @@ public class BlogToUserDao {
 		
 		boolean flag = false;
 		DBconn.init();
-		String sql = "insert into blog_to_user (blog_id, user_id) values('"
-				+ blog_id + "', '"
-				+ user_id + "')";
-		int i = DBconn.addUpdDel(sql);
-		if (i > 0) {
-			flag = true;
+		
+		try {
+			String sql_find = "select * from blog_to_user where user_id=" + user_id + " and blog_id=" + blog_id;
+			ResultSet rs = DBconn.selectSql(sql_find);
+			if (!rs.next()) {
+				String sql = "insert into blog_to_user (blog_id, user_id) values('"
+						+ blog_id + "', '"
+						+ user_id + "')";
+				int i = DBconn.addUpdDel(sql);
+				if (i > 0) {
+					flag = true;
+				}
+				
+			} else {
+				System.out.println("已经收藏");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBconn.closeConn();
+			
 		}
-		DBconn.closeConn();
+		
 		return flag;
 	}
 	
@@ -43,10 +58,11 @@ public class BlogToUserDao {
 	public static boolean cancelCollect(int user_id, int blog_id) {
 		boolean flag = false;
 		DBconn.init();
-		String sql = "delete from blog_to_user where user_id=" + user_id + " blog_id=" + blog_id;
+		String sql = "delete from blog_to_user where user_id=" + user_id + " and blog_id=" + blog_id;
 		int i = DBconn.addUpdDel(sql);
 		if (i > 0) {
 			flag = true;
+			System.out.println("已删除一条记录");
 		}
 		
 		DBconn.closeConn();

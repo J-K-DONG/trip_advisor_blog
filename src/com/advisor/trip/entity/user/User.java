@@ -1,5 +1,6 @@
 package com.advisor.trip.entity.user;
 
+import java.util.function.Predicate;
 
 /**
  * @author JK_DONG
@@ -13,9 +14,11 @@ public class User {
 	private int sex;
 	private String location;
 	private String info;
-	private int phonenum;
+	private String phonenum;
 	private String portrait;
+	private String email;
 	
+
 	public int getId() {
 		return id;
 	}
@@ -52,10 +55,11 @@ public class User {
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	public int getPhonenum() {
+	
+	public String getPhonenum() {
 		return phonenum;
 	}
-	public void setPhonenum(int phonenum) {
+	public void setPhonenum(String phonenum) {
 		this.phonenum = phonenum;
 	}
 	public String getPortrait() {
@@ -66,5 +70,10 @@ public class User {
 	}
 	
 	
-	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }
